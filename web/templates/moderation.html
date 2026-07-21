@@ -31,18 +31,19 @@
   <section class="panel">
     <h2>Verlauf</h2>
     <table class="data-table">
-      <thead><tr><th>Zeit</th><th>Aktion</th><th>Ziel</th><th>Moderator</th><th>Grund</th></tr></thead>
+      <thead><tr><th>Zeit</th><th>Aktion</th><th>Fall</th><th>Ziel</th><th>Moderator</th><th>Grund</th></tr></thead>
       <tbody>
         {% for entry in log %}
           <tr>
             <td class="mono">{{ entry.timestamp[:16].replace('T', ' ') }}</td>
             <td>{{ entry.action }}</td>
+            <td class="mono">{{ entry.case_id or '–' }}</td>
             <td>{{ entry.target }}</td>
             <td>{{ entry.moderator }}</td>
             <td>{{ entry.reason }}</td>
           </tr>
         {% else %}
-          <tr><td colspan="5" class="empty">Noch keine Einträge.</td></tr>
+          <tr><td colspan="6" class="empty">Noch keine Einträge.</td></tr>
         {% endfor %}
       </tbody>
     </table>
