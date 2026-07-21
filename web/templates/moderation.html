@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+  <header class="page-header"><h1>Moderation</h1></header>
+
+  <section class="panel section-gap">
+    <h2>Aktion ausführen</h2>
+    <form class="form" method="post" action="{{ url_for('moderation_action') }}">
+      <div class="form-row">
+        <label>Server-ID</label>
+        <input type="text" name="guild_id" required>
+      </div>
+      <div class="form-row">
+        <label>Nutzer-ID</label>
+        <input type="text" name="user_id" required>
+      </div>
+      <div class="form-row">
+        <label>Aktion</label>
+        <select name="type">
+          <option value="mod.kick">Kick</option>
+          <option value="mod.ban">Ban</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>Grund</label>
+        <input type="text" name="reason">
+      </div>
+      <button type="submit" class="btn">Ausführen</button>
+    </form>
+  </section>
+
+  <section class="panel">
+    <h2>Verlauf</h2>
+    <table class="data-table">
+      <thead><tr><th>Zeit</th><th>Aktion</th><th>Ziel</th><th>Moderator</th><th>Grund</th></tr></thead>
+      <tbody>
+        {% for entry in log %}
+          <tr>
+            <td class="mono">{{ entry.timestamp[:16].replace('T', ' ') }}</td>
+            <td>{{ entry.action }}</td>
+            <td>{{ entry.target }}</td>
+            <td>{{ entry.moderator }}</td>
+            <td>{{ entry.reason }}</td>
+          </tr>
+        {% else %}
+          <tr><td colspan="5" class="empty">Noch keine Einträge.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}

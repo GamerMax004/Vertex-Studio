@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+  <header class="page-header"><h1>Discord-Logs</h1></header>
+  <section class="panel">
+    <table class="data-table">
+      <thead><tr><th>Zeit</th><th>Event</th><th>Detail</th></tr></thead>
+      <tbody>
+        {% for entry in logs %}
+          <tr>
+            <td class="mono">{{ entry.timestamp[:16].replace('T', ' ') }}</td>
+            <td>{{ entry.event }}</td>
+            <td>{{ entry.detail }}</td>
+          </tr>
+        {% else %}
+          <tr><td colspan="3" class="empty">Noch keine Log-Einträge.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}

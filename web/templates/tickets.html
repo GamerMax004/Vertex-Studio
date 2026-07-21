@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+  <header class="page-header">
+    <h1>Tickets</h1>
+  </header>
+
+  <section class="panel">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Erstellt von</th>
+          <th>Status</th>
+          <th>Erstellt</th>
+          <th>Geschlossen</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ticket in tickets %}
+          <tr>
+            <td class="mono">{{ ticket.id }}</td>
+            <td>{{ ticket.opened_by }}</td>
+            <td><span class="badge badge-{{ 'open' if ticket.status == 'offen' else 'closed' }}">{{ ticket.status }}</span></td>
+            <td>{{ ticket.created_at[:16].replace('T', ' ') }}</td>
+            <td>{{ ticket.closed_at[:16].replace('T', ' ') if ticket.closed_at else '–' }}</td>
+            <td>
+              {% if ticket.status == 'offen' %}
+                <form method="post" action="{{ url_for('close_ticket', ticket_id=ticket.id) }}">
+                  <input type="hidden" name="actor" value="Dashboard">
+                  <button type="submit" class="btn-small">Schließen</button>
+                </form>
+              {% endif %}
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="6" class="empty">Noch keine Tickets.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}

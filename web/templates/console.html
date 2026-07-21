@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+  <header class="page-header"><h1>Live-Konsole</h1></header>
+  <section class="panel">
+    <ul class="live-feed">
+      {% for entry in live_feed %}
+        <li>
+          <span class="feed-time">{{ entry.timestamp[11:16] }}</span>
+          <span class="feed-text">[{{ entry.category }}] {{ entry.text }}</span>
+        </li>
+      {% else %}
+        <li class="empty">Noch keine Ereignisse.</li>
+      {% endfor %}
+    </ul>
+  </section>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+  <header class="page-header"><h1>Dateimanager</h1></header>
+  <section class="panel">
+    <h2>Ticket-Transcripts</h2>
+    <table class="data-table">
+      <thead><tr><th>Datei</th><th></th></tr></thead>
+      <tbody>
+        {% for name in transcripts %}
+          <tr>
+            <td class="mono">{{ name }}</td>
+            <td><a class="btn-small" href="{{ url_for('files_download_transcript', name=name) }}">Download</a></td>
+          </tr>
+        {% else %}
+          <tr><td colspan="2" class="empty">Noch keine Transcripts.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}

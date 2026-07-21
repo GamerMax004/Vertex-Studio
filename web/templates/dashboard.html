@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+  <header class="page-header">
+    <h1>Dashboard</h1>
+  </header>
+
+  <section class="grid grid-4">
+    <div class="stat-card">
+      <span class="stat-label">Status</span>
+      <span class="stat-value">
+        <span class="dot {{ 'dot-on' if bot_status.online else 'dot-off' }}"></span>
+        {{ 'Online' if bot_status.online else 'Offline' }}
+      </span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Ping</span>
+      <span class="stat-value">{{ bot_status.latency_ms if bot_status.latency_ms is not none else '–' }} ms</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Server</span>
+      <span class="stat-value">{{ bot_status.guild_count }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Offene Tickets</span>
+      <span class="stat-value">{{ ticket_summary.offen }}</span>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Live Feed</h2>
+    <ul id="live-feed" class="live-feed">
+      {% for entry in live_feed %}
+        <li>
+          <span class="feed-time">{{ entry.timestamp[11:16] }}</span>
+          <span class="feed-text">{{ entry.text }}</span>
+        </li>
+      {% else %}
+        <li class="empty">Noch keine Ereignisse.</li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+  <header class="page-header"><h1>Rollenverwaltung</h1></header>
+  <section class="panel">
+    <p style="color:var(--text-dim); font-size:13px; margin-top:0;">
+      Neue Panels werden per <code class="mono">/rolepanel</code> direkt in Discord erstellt
+      (Kanal- und Rollenauswahl funktioniert dort nativ). Hier siehst du, welche Panels aktiv sind.
+    </p>
+    <table class="data-table">
+      <thead><tr><th>Titel</th><th>Kanal-ID</th><th>Rollen</th></tr></thead>
+      <tbody>
+        {% for id, panel in panels.items() %}
+          <tr>
+            <td>{{ panel.title }}</td>
+            <td class="mono">{{ panel.channel_id }}</td>
+            <td>{{ panel.roles | map(attribute='label') | join(', ') }}</td>
+          </tr>
+        {% else %}
+          <tr><td colspan="3" class="empty">Noch keine Panels erstellt.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}

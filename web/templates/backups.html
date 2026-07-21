@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+  <header class="page-header"><h1>Backup-Center</h1></header>
+
+  <section class="panel section-gap">
+    <h2>Neues Backup</h2>
+    <form class="form" method="post" action="{{ url_for('backups_create') }}">
+      <div class="form-row">
+        <label>Server-ID</label>
+        <input type="text" name="guild_id" required>
+      </div>
+      <button type="submit" class="btn">Backup erstellen</button>
+    </form>
+  </section>
+
+  <section class="panel">
+    <h2>Vorhandene Backups</h2>
+    <table class="data-table">
+      <thead><tr><th>Erstellt</th><th>Server</th><th></th></tr></thead>
+      <tbody>
+        {% for b in backups %}
+          <tr>
+            <td class="mono">{{ b.created_at[:16].replace('T', ' ') }}</td>
+            <td>{{ b.guild_name }}</td>
+            <td><a class="btn-small" href="{{ url_for('backups_download', backup_id=b.id) }}">Download</a></td>
+          </tr>
+        {% else %}
+          <tr><td colspan="3" class="empty">Noch keine Backups.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}

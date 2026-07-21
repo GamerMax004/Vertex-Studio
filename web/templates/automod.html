@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+  <header class="page-header"><h1>Automod</h1></header>
+  <section class="panel">
+    <form class="form" method="post" action="{{ url_for('automod_save') }}">
+      <div class="form-row checkbox-row">
+        <input type="checkbox" name="enabled" id="enabled" {{ 'checked' if automod.enabled }}>
+        <label for="enabled" style="text-transform:none;letter-spacing:0;">Automod aktiv</label>
+      </div>
+      <div class="form-row">
+        <label>Verbotene Wörter (kommagetrennt)</label>
+        <textarea name="banned_words">{{ automod.banned_words | join(', ') }}</textarea>
+      </div>
+      <div class="form-row">
+        <label>Maximale Erwähnungen pro Nachricht</label>
+        <input type="number" name="max_mentions" value="{{ automod.max_mentions }}">
+      </div>
+      <button type="submit" class="btn">Speichern</button>
+    </form>
+  </section>
+{% endblock %}

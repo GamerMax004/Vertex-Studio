@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+  <header class="page-header"><h1>Slash-Commands</h1></header>
+  <section class="panel">
+    <table class="data-table">
+      <thead><tr><th>Befehl</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+        {% for cmd in commands %}
+          <tr>
+            <td class="mono">/{{ cmd.name }}</td>
+            <td><span class="badge {{ 'badge-open' if cmd.enabled else 'badge-closed' }}">{{ 'aktiv' if cmd.enabled else 'deaktiviert' }}</span></td>
+            <td>
+              <form method="post" action="{{ url_for('commands_toggle', name=cmd.name) }}">
+                <button type="submit" class="btn-small">{{ 'Deaktivieren' if cmd.enabled else 'Aktivieren' }}</button>
+              </form>
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="3" class="empty">Noch keine Befehle synchronisiert (Bot einmal starten).</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}

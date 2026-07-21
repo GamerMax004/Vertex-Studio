@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+  <header class="page-header"><h1>Embed Builder</h1></header>
+  <section class="panel">
+    <form class="form" method="post" action="{{ url_for('embeds_send') }}">
+      <div class="form-row">
+        <label>Kanal-ID</label>
+        <input type="text" name="channel_id" required>
+      </div>
+      <div class="form-row">
+        <label>Titel</label>
+        <input type="text" name="title">
+      </div>
+      <div class="form-row">
+        <label>Beschreibung</label>
+        <textarea name="description"></textarea>
+      </div>
+      <div class="form-row">
+        <label>Farbe (Hex, z.B. 5b8cff)</label>
+        <input type="text" name="color" placeholder="5b8cff">
+      </div>
+      <div class="form-row">
+        <label>Footer</label>
+        <input type="text" name="footer">
+      </div>
+      <div class="form-row">
+        <label>Bild-URL</label>
+        <input type="text" name="image_url">
+      </div>
+      <button type="submit" class="btn">Senden</button>
+    </form>
+  </section>
+{% endblock %}

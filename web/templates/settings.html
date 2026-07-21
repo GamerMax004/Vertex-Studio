@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+  <header class="page-header"><h1>Server-Einstellungen</h1></header>
+
+  <section class="panel">
+    <form class="form" method="post" action="{{ url_for('settings_save') }}">
+      <div class="form-row">
+        <label>Bot-Status (Aktivitätstext)</label>
+        <input type="text" name="status_text" value="{{ settings.status_text or '' }}">
+      </div>
+
+      <div class="form-row">
+        <label>Willkommens-Kanal-ID</label>
+        <input type="text" name="welcome_channel_id" value="{{ automations.welcome_channel_id or '' }}">
+      </div>
+      <div class="form-row">
+        <label>Willkommensnachricht (Platzhalter: {user})</label>
+        <textarea name="welcome_message">{{ automations.welcome_message or '' }}</textarea>
+      </div>
+
+      <div class="form-row">
+        <label>Booster-Rollen-ID</label>
+        <input type="text" name="boost_role_id" value="{{ automations.boost_role_id or '' }}">
+      </div>
+      <div class="form-row">
+        <label>Boost-Dankesnachricht (per DM)</label>
+        <textarea name="boost_message">{{ automations.boost_message or '' }}</textarea>
+      </div>
+
+      <button type="submit" class="btn">Speichern</button>
+    </form>
+  </section>
+{% endblock %}

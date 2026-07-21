@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+  <header class="page-header"><h1>Analytics</h1></header>
+  <section class="grid grid-4">
+    <div class="stat-card"><span class="stat-label">Tickets gesamt</span><span class="stat-value">{{ stats.tickets_total }}</span></div>
+    <div class="stat-card"><span class="stat-label">Tickets offen</span><span class="stat-value">{{ stats.tickets_offen }}</span></div>
+    <div class="stat-card"><span class="stat-label">Mod-Aktionen</span><span class="stat-value">{{ stats.mod_aktionen }}</span></div>
+    <div class="stat-card"><span class="stat-label">Log-Einträge</span><span class="stat-value">{{ stats.discord_logs }}</span></div>
+    <div class="stat-card"><span class="stat-label">Kicks</span><span class="stat-value">{{ stats.mod_kicks }}</span></div>
+    <div class="stat-card"><span class="stat-label">Bans</span><span class="stat-value">{{ stats.mod_bans }}</span></div>
+    <div class="stat-card"><span class="stat-label">Warnungen</span><span class="stat-value">{{ stats.mod_warns }}</span></div>
+  </section>
+{% endblock %}

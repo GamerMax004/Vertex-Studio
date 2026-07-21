@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+  <header class="page-header"><h1>Aufgaben</h1></header>
+
+  <section class="panel section-gap">
+    <h2>Neue Erinnerung</h2>
+    <form class="form" method="post" action="{{ url_for('tasks_create') }}">
+      <div class="form-row">
+        <label>Inhalt</label>
+        <input type="text" name="content" required>
+      </div>
+      <div class="form-row">
+        <label>Fällig am</label>
+        <input type="datetime-local" name="due_at" required>
+      </div>
+      <div class="form-row">
+        <label>Kanal-ID (optional, für Erinnerungsnachricht)</label>
+        <input type="text" name="channel_id">
+      </div>
+      <button type="submit" class="btn">Anlegen</button>
+    </form>
+  </section>
+
+  <section class="panel">
+    <h2>Alle Aufgaben</h2>
+    <table class="data-table">
+      <thead><tr><th>Fällig</th><th>Inhalt</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for t in tasks %}
+          <tr>
+            <td class="mono">{{ t.due_at[:16].replace('T', ' ') }}</td>
+            <td>{{ t.content }}</td>
+            <td><span class="badge {{ 'badge-closed' if t.done else 'badge-open' }}">{{ 'erledigt' if t.done else 'offen' }}</span></td>
+          </tr>
+        {% else %}
+          <tr><td colspan="3" class="empty">Keine Aufgaben.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}

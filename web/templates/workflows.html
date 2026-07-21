@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% block content %}
+  <header class="page-header"><h1>Workflows</h1></header>
+
+  <section class="panel section-gap">
+    <h2>Vorhandene Workflows</h2>
+    {% for wf in workflows %}
+      <div class="wf-pipeline">
+        <div class="wf-node wf-trigger">
+          <span class="wf-node-label">Trigger</span>
+          <strong>{{ wf.trigger.type }}</strong>
+          {% if wf.trigger.keyword %}<span class="wf-node-sub">"{{ wf.trigger.keyword }}"</span>{% endif %}
+        </div>
+        {% for action in wf.actions %}
+          <span class="wf-arrow">→</span>
+          <div class="wf-node wf-action">
+            <span class="wf-node-label">Aktion</span>
+            <strong>{{ action.type }}</strong>
+          </div>
+        {% endfor %}
+        <div class="wf-meta">
+          <span class="pill {{ 'on' if wf.enabled else 'off' }}">{{ wf.name }} · {{ 'aktiv' if wf.enabled else 'pausiert' }}</span>
+          <form method="post" action="{{ url_for('workflows_toggle', wf_id=wf.id) }}" style="display:inline;">
+            <button type="submit" class="btn-small">{{ 'Pausieren' if wf.enabled else 'Aktivieren' }}</button>
+          </form>
+          <form method="post" action="{{ url_for('workflows_delete', wf_id=wf.id) }}" style="display:inline;">
+            <button type="submit" class="btn-small">Löschen</button>
+          </form>
+        </div>
+      </div>
+    {% else %}
+      <p class="empty">Noch keine Workflows.</p>
+    {% endfor %}
+  </section>
+
+  <section class="panel">
+    <h2>Neuer Workflow</h2>
+    <form class="form" id="workflow-form" method="post" action="{{ url_for('workflows_create') }}" style="max-width: 640px;">
+      <div class="form-row">
+        <label>Name</label>
+        <input type="text" name="name" required>
+      </div>
+
+      <div class="form-row">
+        <label>Trigger</label>
+        <select name="trigger_type" id="trigger_type">
+          <option value="member_join">Mitglied tritt bei</option>
+          <option value="member_boost">Mitglied boostet</option>
+          <option value="ticket_closed">Ticket geschlossen</option>
+          <option value="message_keyword">Nachricht enthält Schlüsselwort</option>
+        </select>
+      </div>
+      <div class="form-row" id="keyword-row" style="display:none;">
+        <label>Schlüsselwort</label>
+        <input type="text" name="trigger_keyword">
+      </div>
+
+      <div id="action-pipeline"></div>
+      <button type="button" class="btn-small" id="add-action" style="align-self:flex-start;">+ Aktion hinzufügen</button>
+
+      <input type="hidden" name="actions_json" id="actions_json">
+      <button type="submit" class="btn">Workflow erstellen</button>
+    </form>
+  </section>
+
+  <template id="action-template">
+    <div class="wf-builder-node">
+      <span class="wf-arrow">→</span>
+      <div class="wf-node wf-action wf-editable">
+        <select class="action-type">
+          <option value="send_message">Nachricht senden</option>
+          <option value="add_role">Rolle geben</option>
+          <option value="remove_role">Rolle entfernen</option>
+          <option value="send_embed">Embed senden</option>
+        </select>
+
+        <div class="action-fields" data-for="send_message">
+          <input type="text" placeholder="Kanal-ID" class="f-channel_id">
+          <textarea placeholder="Inhalt (Platzhalter: {user}, {ticket_id})" class="f-content"></textarea>
+        </div>
+        <div class="action-fields" data-for="add_role" style="display:none;">
+          <input type="text" placeholder="Rollen-ID" class="f-role_id">
+        </div>
+        <div class="action-fields" data-for="remove_role" style="display:none;">
+          <input type="text" placeholder="Rollen-ID" class="f-role_id">
+        </div>
+        <div class="action-fields" data-for="send_embed" style="display:none;">
+          <input type="text" placeholder="Kanal-ID" class="f-channel_id">
+          <input type="text" placeholder="Titel" class="f-title">
+          <textarea placeholder="Beschreibung" class="f-description"></textarea>
+          <input type="text" placeholder="Farbe (Hex)" class="f-color">
+        </div>
+
+        <button type="button" class="btn-small remove-action">Entfernen</button>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    const triggerType = document.getElementById('trigger_type');
+    const keywordRow = document.getElementById('keyword-row');
+    triggerType.addEventListener('change', () => {
+      keywordRow.style.display = triggerType.value === 'message_keyword' ? 'flex' : 'none';
+    });
+
+    const pipeline = document.getElementById('action-pipeline');
+    const tpl = document.getElementById('action-template');
+
+    document.getElementById('add-action').addEventListener('click', () => {
+      const node = tpl.content.cloneNode(true);
+      const select = node.querySelector('.action-type');
+      const fieldGroups = node.querySelectorAll('.action-fields');
+      select.addEventListener('change', () => {
+        fieldGroups.forEach(g => g.style.display = g.dataset.for === select.value ? 'flex' : 'none');
+      });
+      node.querySelector('.remove-action').addEventListener('click', (e) => {
+        e.target.closest('.wf-builder-node').remove();
+      });
+      pipeline.appendChild(node);
+    });
+
+    document.getElementById('workflow-form').addEventListener('submit', (e) => {
+      const actions = [];
+      pipeline.querySelectorAll('.wf-builder-node').forEach(node => {
+        const type = node.querySelector('.action-type').value;
+        const visible = node.querySelector(`.action-fields[data-for="${type}"]`);
+        const action = { type };
+        visible.querySelectorAll('[class^="f-"]').forEach(field => {
+          const key = field.className.replace('f-', '');
+          action[key] = field.value;
+        });
+        actions.push(action);
+      });
+      document.getElementById('actions_json').value = JSON.stringify(actions);
+    });
+  </script>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+  <header class="page-header"><h1>Announcement Center</h1></header>
+
+  <section class="panel section-gap">
+    <h2>Neue Ankündigung</h2>
+    <form class="form" method="post" action="{{ url_for('announcements_create') }}">
+      <div class="form-row">
+        <label>Kanal-ID</label>
+        <input type="text" name="channel_id" required>
+      </div>
+      <div class="form-row">
+        <label>Inhalt</label>
+        <textarea name="content" required></textarea>
+      </div>
+      <div class="form-row">
+        <label>Zeitpunkt</label>
+        <input type="datetime-local" name="send_at" required>
+      </div>
+      <div class="form-row">
+        <label>Wiederholung</label>
+        <select name="repeat">
+          <option value="once">Einmalig</option>
+          <option value="daily">Täglich</option>
+          <option value="weekly">Wöchentlich</option>
+        </select>
+      </div>
+      <button type="submit" class="btn">Planen</button>
+    </form>
+  </section>
+
+  <section class="panel">
+    <h2>Geplant</h2>
+    <table class="data-table">
+      <thead><tr><th>Zeitpunkt</th><th>Kanal</th><th>Inhalt</th><th>Wiederholung</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for a in announcements %}
+          <tr>
+            <td class="mono">{{ a.send_at[:16].replace('T', ' ') }}</td>
+            <td class="mono">{{ a.channel_id }}</td>
+            <td>{{ a.content[:60] }}</td>
+            <td>{{ a.repeat }}</td>
+            <td><span class="badge {{ 'badge-closed' if a.sent else 'badge-open' }}">{{ 'gesendet' if a.sent else 'wartend' }}</span></td>
+          </tr>
+        {% else %}
+          <tr><td colspan="5" class="empty">Keine Ankündigungen geplant.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vertex Studio{% if active %} · {{ nav_modules | selectattr('key', 'equalto', active) | map(attribute='label') | first }}{% endif %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark">◇</span>
+        <span class="brand-name">Vertex&nbsp;Studio</span>
+      </div>
+      <nav>
+        {% for mod in nav_modules %}
+          {% if mod.ready %}
+            <a class="nav-item {% if active == mod.key %}active{% endif %}" href="{{ url_for(mod.endpoint or mod.key) }}">{{ mod.label }}</a>
+          {% else %}
+            <span class="nav-item disabled" title="Noch nicht verfügbar">{{ mod.label }}</span>
+          {% endif %}
+        {% endfor %}
+      </nav>
+    </aside>
+    <main class="content">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</body>
+</html>
